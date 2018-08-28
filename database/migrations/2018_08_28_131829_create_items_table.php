@@ -15,10 +15,10 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
           $table->increments('id');
-          $table->timestamps();
           $table->string("item");
           $table->integer("amount");
           $table->boolean("stocked");
+          $table->timestamps();
         });
     }
 
