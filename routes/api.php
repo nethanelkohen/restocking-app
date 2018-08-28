@@ -19,5 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get("items", "ItemController@index");
 Route::post("item", "ItemController@store");
-Route::get("item/{id}/edit", "ItemController@update");
+Route::get("item/{id}/complete", "ItemController@complete");
 Route::get("item/{id}/delete", "ItemController@destroy");

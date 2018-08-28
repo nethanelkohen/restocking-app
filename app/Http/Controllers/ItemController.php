@@ -1,59 +1,53 @@
 <?php
-
-
 namespace App\Http\Controllers;
-
-
 use Illuminate\Http\Request;
 use App\Item;
 
-
 class ItemController extends Controller
-{
-    public function index()
-    {
-        $items = Item::all();
-        return response()->json($items);
-    }
+ {
+  public function index()
+  {
+    $items = Item::where("stocked", false)->orderBy("id", "DEC")->get();
+    $s_items = Item::where("stocked", true)->get();
+    return response()->json([
+     'items' => $items,
+     's_items' => $s_items
+    ]);
+  }
 
+  public function store(Request $request)
+   {
 
-    public function store(Request $request)
-    {
-        $item = new Item([
-          'title' => $request->get('title'),
-          'amount' => $request->get('amount'),
-          'stocked' => $request->get('stocked'),
-        ]);
-        $item->save();
+    $item = Item::create([
+    'item' => request('item'),
+    'stocked' => request('stocked'),
+    'amount' => request('amount')
+    ]);
 
+    return response()->json([
+     "code" => 200,
+     "message" => "Item added successfully"
+    ]);
+  }
 
-        return response()->json('Item Added Successfully.');
-    }
+  public function complete($id)
+  {
+    $item = Item::find($id);
+    $item->stocked = true;
+    $item->save();
+    return response()->json([
+     "code" => 200,
+     "message" => "Item listed as completed"
+    ]);
+  }
 
-    public function edit($id)
-    {
-        $item = Item::find($id);
-        return response()->json($item);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $item = Item::find($id);
-        $item->title = $request->get('title');
-        $item->amount = $request->get('amount');
-        $item->stocked = $request->get('stocked');
-        $item->save();
-
-
-        return response()->json('Item Updated Successfully.');
-    }
-
-    public function destroy($id)
-    {
-      $item = Item::find($id);
-      $item->delete();
-
-
-      return response()->json('Item Deleted Successfully.');
-    }
+  public function destroy($id)
+  {
+    $item = Item::find($id);
+    $item = $item->delete();
+    return response()->json([
+    "code" => 200,
+    "message" => "Item deleted successfully"
+   ]);
+ }
 }
